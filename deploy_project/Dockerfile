@@ -4,6 +4,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys AA8E81B4331F7F50
 RUN apt-get upgrade
 RUN apt-get install python3-dev gcc linux-headers libc-dev
 
