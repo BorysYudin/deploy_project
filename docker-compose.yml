@@ -4,8 +4,8 @@ services:
   nginx:
 #    image: awsdemo-nginx:latest
     build:
-      context: .
-      dockerfile: Dockerfile.nginx
+      context: ./nginx
+      dockerfile: Dockerfile
     ports:
       - "80:80"
     volumes:
@@ -19,8 +19,8 @@ services:
   web:
 #    image: awsdemo-app:latest
     build:
-      context: .
-      dockerfile: Dockerfile.app
+      context: ./deploy_project
+      dockerfile: Dockerfile
     command: gunicorn awsdemo.wsgi:application --reload --bind 0.0.0.0:8000
     volumes:
       - ./app/:/usr/src/app/
