@@ -3,7 +3,8 @@ FROM python:3.6.0
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN apt-get update && apt-get upgrade
+RUN apt-get update
+RUN apt-get upgrade
 RUN apt-get install python3-dev gcc linux-headers libc-dev
 
 WORKDIR /usr/src/app/

@@ -1,10 +1,14 @@
-from fabric2 import task, Connection
-from fabric2.transfer import Transfer
 import time
 import getpass
 
+from pathlib import Path
+from fabric2 import task, Connection
+from fabric2.transfer import Transfer
+
+home = str(Path.home())
+
 HOST = 'ec2-3-82-207-146.compute-1.amazonaws.com'
-KEY_FILE = '~/.ssh/deploy_proj.pem'
+KEY_FILE = f'{home}/.ssh/deploy_proj.pem'
 DEFAULT_LOGIN = 'demo@demo.com'
 DEFAULT_PASS = 'demo'
 DEFAULT_USER = 'demo'
@@ -19,36 +23,37 @@ host = Connection(host=HOST,
 def install_instance(c):
     if True or host.sudo('service docker status', hide='out',
                          warn=True).failed:
-        print('Docker not found. Installing it.')
-        host.sudo('apt-get update')
-        host.sudo(
-            'apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common')
-        host.sudo(
-            'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -')
-        host.sudo('apt-key fingerprint 0EBFCD88')
-        host.sudo(
-            'add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"')
-        host.sudo('apt-get update')
-        host.sudo('apt-get install -y docker-ce docker-ce-cli containerd.io')
-        host.sudo('usermod -a -G docker $USER')
-        host.sudo('docker swarm init')
-        print(
-            '### KEY ######################################################################')
-        host.run(
-            'ssh-keygen -t rsa -C "demo@demo.com" -f ~/.ssh/id_rsa -q -N ""')
-        host.run('cat ~/.ssh/id_rsa.pub')
-        print(
-            '### KEY ######################################################################')
-        res = 't'
-        while res.lower():
-            res = getpass.getpass('Update you github account and hit enter.')
-        host.run('ssh-keyscan github.com >> ~/.ssh/known_hosts')
-        host.run('mkdir awsdemo')
+        # print('Docker not found. Installing it.')
+        # host.sudo('apt-get update')
+        # host.sudo(
+        #     'apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common')
+        # host.sudo(
+        #     'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -')
+        # host.sudo('apt-key fingerprint 0EBFCD88')
+        # host.sudo(
+        #     'add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"')
+        # host.sudo('apt-get update')
+        # host.sudo('apt-get install -y docker-ce docker-ce-cli containerd.io')
+        # host.sudo('usermod -a -G docker $USER')
+        # host.sudo('docker swarm init')
+        # print(
+        #     '### KEY ######################################################################')
+        # host.run(
+        #     'ssh-keygen -t rsa -C "demo@demo.com" -f ~/.ssh/id_rsa -q -N ""')
+        # host.run('cat ~/.ssh/id_rsa.pub')
+        # print(
+        #     '### KEY ######################################################################')
+        # res = 't'
+        # while res.lower():
+        #     res = getpass.getpass('Update you github account and hit enter.')
+        # host.run('ssh-keyscan github.com >> ~/.ssh/known_hosts')
+        # host.run('mkdir awsdemo')
         with host.cd('awsdemo'):
-            host.run(
-                'git clone https://github.com/creotiv/aws-docker-example.git .')
+            # host.run(
+            #     'git clone https://github.com/BorysYudin/deploy_project.git .')
             host.run('git checkout master')
-            host.run('docker build -t awsdemo-app app')
+            host.run('git pull')
+            host.run('docker build -t awsdemo-app deploy_project')
             host.run('docker build -t awsdemo-nginx nginx')
             host.run('docker stack deploy -c docker-compose.yml awsdemo')
             while True:
@@ -76,7 +81,7 @@ def deploy(c):
     with host.cd('awsdemo'):
         host.run('git pull')
         host.run('git checkout master')
-        host.run('docker build -t awsdemo-app app')
+        host.run('docker build -t awsdemo-app deploy_project')
         host.run('docker build -t awsdemo-nginx nginx')
         host.run('docker service update awsdemo_web')
 
