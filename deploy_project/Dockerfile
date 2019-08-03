@@ -5,7 +5,9 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update
 RUN apt-get upgrade -y
-RUN apt-get install python3-dev gcc linux-headers-`uname -r` libc-dev
+RUN apt-get install python3-dev gcc libc-dev
+RUN aptitude update
+RUN aptitude install linux-headers-`uname -r`
 
 WORKDIR /usr/src/app/
 
