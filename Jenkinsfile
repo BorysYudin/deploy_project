@@ -35,6 +35,7 @@ pipeline {
     post {
         always {
             echo "Finished Stages"
+            echo "Tested GitHub webhook"
         }
     }
 }
