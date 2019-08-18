@@ -4,21 +4,34 @@ pipeline {
         stage("Build") {
             steps {
                 echo "Building"
+
+                post {
+                    always {
+                        echo "Finished Building"
+                    }
+                }
             }
         }
         stage("Test") {
             steps {
                 echo "Testing"
+
+                post {
+                    always {
+                        echo "Finished Testing"
+                    }
+                }
             }
         }
         stage("Deploy") {
             steps {
                 echo "Deploying"
-            }
-        }
-        post {
-            always {
-                echo "Finished stage"
+
+                post {
+                    always {
+                        echo "Finished Deploying"
+                    }
+                }
             }
         }
     }
