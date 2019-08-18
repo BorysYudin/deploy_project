@@ -2,30 +2,30 @@ version: '3'
 
 services:
   nginx:
-#    image: awsdemo-nginx:latest
+    image: deploy-app-nginx:latest
     build:
-      context: ./nginx
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile.nginx
     ports:
-      - "80:80"
-    volumes:
-      - static_volume:/usr/src/app/staticfiles
-      - media_volume:/usr/src/app/mediafiles
+      - "8088:80"
+#    volumes:
+#      - static_volume:/usr/src/app/staticfiles
+#      - media_volume:/usr/src/app/mediafiles
     depends_on:
       - web
     networks:
       - backend_net
 
   web:
-#    image: awsdemo-app:latest
+    image: deploy-app:latest
     build:
-      context: ./deploy_project
+      context: .
       dockerfile: Dockerfile
-    command: gunicorn awsdemo.wsgi:application --reload --bind 0.0.0.0:8000
+    command: gunicorn deploy_project.wsgi:application --reload --bind 0.0.0.0:8000
     volumes:
-      - ./app/:/usr/src/app/
-      - static_volume:/usr/src/app/staticfiles
-      - media_volume:/usr/src/app/mediafiles
+      - ./:/usr/src/app/
+#      - static_volume:/usr/src/app/staticfiles
+#      - media_volume:/usr/src/app/mediafiles
     environment:
 #      - SQL_ENGINE=postgresql
 #      - SQL_DATABASE=awsdemo
@@ -33,7 +33,7 @@ services:
 #      - SQL_PASS=awsdemo
 #      - SQL_HOST=db
 #      - SQL_PORT=5432
-      - DEBUG=True
+      - DEBUG=False
 #    depends_on:
 #      - db
     networks:
@@ -51,10 +51,10 @@ services:
 #    networks:
 #      - backend_net
 
-volumes:
+#volumes:
 #  postgres_data:
-  static_volume:
-  media_volume:
+#  static_volume:
+#  media_volume:
 #  backups:
 
 networks:

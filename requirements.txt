@@ -5,6 +5,7 @@ cryptography==2.7
 Django==2.2.4
 djangorestframework==3.10.1
 fabric2==2.4.0
+gunicorn==19.9.0
 invoke==1.2.0
 paramiko==2.6.0
 pycparser==2.19
