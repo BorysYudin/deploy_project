@@ -15,16 +15,26 @@ pipeline {
             steps {
                 echo "Testing"
             }
+            post {
+                always {
+                    echo "Finished Testing"
+                }
+            }
         }
         stage("Deploy") {
             steps {
                 echo "Deploying"
             }
+            post {
+                always {
+                    echo "Finished Deploying"
+                }
+            }
         }
     }
     post {
         always {
-            echo "Finished Testing"
+            echo "Finished Stages"
         }
     }
 }
