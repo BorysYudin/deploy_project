@@ -36,6 +36,7 @@ pipeline {
         always {
             echo "Finished Stages"
             echo "Tested GitHub webhook"
+            echo "Tested GitHub webhook teeeeeeest"
         }
     }
 }
